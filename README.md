@@ -1,153 +1,225 @@
-## PM Operating System (Markdown-first) + Cisco Compute notes
+# CCPM-OS — Product Manager Operating System
 
-This repo is a **Markdown-first operating system for Product Managers**: reusable Cursor “slash commands” (workflows) and “skills” (playbooks/templates) that turn rough inputs into high-quality PM artifacts fast, with minimal back-and-forth.
+A **Markdown-first operating system for Product Managers** built for [Cursor](https://cursor.sh). Reusable slash commands (workflows) and skills (playbooks/templates) that turn rough inputs into high-quality PM artifacts — fast, with minimal back-and-forth.
 
-It also includes a Cisco Compute/UCS/Intersight vocabulary + portfolio reference to keep internal docs consistent.
-
----
-
-## Quickstart (how to use)
-
-- Open this folder in **Cursor**.
-- Use the **slash commands** in `.cursor/commands/` (type `/` in chat, pick a command, paste your input).
-- Outputs should default to **markdown saved under `Cisco/<project>/...`** (see structure below).
-
-### Important default behavior (repo rule)
-
-- **Plan-only by default**: don’t edit files or run terminal commands until you explicitly say **“go ahead.”**
-- Ask **≤ 2** critical questions; otherwise assume sensible defaults.
-- Prefer existing workflows in `.cursor/commands/` and `.cursor/skills/` over inventing new formats.
-
-(These are defined in `CLAUDE.md` at the repo root.)
+**40 commands** across 7 categories. **70 skills** covering strategy, execution, research, GTM, and more.
 
 ---
 
-## What’s in here
+## Installation
 
-### 1) Workspace operating rules
+### Cursor
 
-- `CLAUDE.md`
-  - Defines the PM OS defaults, output conventions, and quality bar.
+1. Clone this repository:
 
-### 2) Cisco Compute reference
+```bash
+git clone https://github.com/<your-org>/ccpm-os.git
+```
 
-- `Cisco/CLAUDE.md`
-  - “Fast internal-context reference” for **Cisco Compute**: UCS portfolio map, Intersight framing, glossary, and stakeholder triage questions.
+2. Open the cloned folder in **Cursor** (`File → Open Folder`).
 
-Use this when you want consistent language across PRDs, strategy docs, and stakeholder updates.
+3. That's it. Cursor automatically detects:
+   - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
+   - **Skills** in `skills/` — referenced by commands automatically
+   - **Rules** in `CLAUDE.md` — applied as workspace-level instructions
 
----
+4. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
 
-## Cursor commands (workflows)
+### Manual setup (any AI editor)
 
-Slash commands live under `.cursor/commands/` and are organized by category.
+If you're not using Cursor, you can still use the skills and commands as prompt templates:
 
-### Data & analytics (`.cursor/commands/pm-data-analytics/`)
-
-- `/analyze-test` — A/B test analysis (significance, power checks, ship/extend/stop)
-- `/analyze-cohorts` — cohort/retention analysis
-- `/write-query` — generate SQL from natural language
-
-### Execution (`.cursor/commands/pm-execution/`)
-
-- `/meeting-notes` — turn transcripts into decisions + action items
-- `/write-prd` — draft a PRD from an idea/problem statement
-- `/write-stories` — generate user stories / backlog items
-- `/test-scenarios` — generate QA scenarios from requirements
-- `/stakeholder-map` — power/interest mapping + comms plan
-- `/plan-okrs` — OKR brainstorming
-- `/sprint` — sprint planning
-- `/pre-mortem` — launch/initiative risk pre-mortem
-- `/transform-roadmap` — output roadmap → outcome roadmap
-- `/generate-data` — create dummy datasets
-
-### Product discovery (`.cursor/commands/pm-product-discovery/`)
-
-- `/brainstorm` — generate ideas for a problem space
-- `/discover` — structure discovery work
-- `/interview` — interview scripts/questions
-- `/setup-metrics` — metrics + dashboard setup
-- `/triage-requests` — analyze/cluster feature requests
-
-### Research (`.cursor/commands/pm-market-research/`)
-
-- `/research-users` — user research synthesis/plans
-- `/analyze-feedback` — sentiment/themes from feedback
-- `/competitive-analysis` — competitor analysis
-
-### Marketing & growth (`.cursor/commands/pm-marketing-growth/`)
-
-- `/north-star` — define North Star + input metrics
-- `/market-product` — positioning/value prop style outputs
-
-### Go-to-market (`.cursor/commands/pm-go-to-market/`)
-
-- `/plan-launch` — GTM plan
-- `/growth-strategy` — growth loops/motions
-- `/battlecard` — competitive battlecard
-
-### Product strategy (`.cursor/commands/pm-product-strategy/`)
-
-- `/strategy` — product strategy canvas-style output
-- `/pricing` — pricing analysis + options
-- `/market-scan` — market scan
-- `/business-model` — business model canvas
-- `/value-proposition` — value prop design
-
-### Toolkit (`.cursor/commands/pm-toolkit/`)
-
-- `/proofread` — grammar/flow check
-- `/draft-nda` — NDA draft
-- `/privacy-policy` — privacy policy draft
-- `/review-resume` — resume review
-- `/tailor-resume` — resume tailoring
+1. Clone the repo
+2. Browse `commands/` for workflow prompts and `skills/` for detailed playbooks
+3. Copy-paste the content into your AI tool of choice
 
 ---
 
-## Skills (playbooks/templates)
+## Quickstart
 
-Skills live under `.cursor/skills/` and are referenced by commands (e.g., `/write-prd` uses the `create-prd` skill).
+1. Open this folder in **Cursor**
+2. Open the chat panel and type `/` to see available commands
+3. Pick a command, paste your input, and go
 
-Examples you have in this repo include:
+### Default behavior
 
-- **Data/analytics**: `ab-test-analysis`, `cohort-analysis`, `sql-queries`
-- **Execution**: `create-prd`, `user-stories`, `job-stories`, `release-notes`, `pre-mortem`, `stakeholder-map`, `summarize-meeting`, `test-scenarios`, `dummy-dataset`, `prioritization-frameworks`, `outcome-roadmap`, `sprint-plan`, `retro`
-- **Discovery**: opportunity-solution-tree, assumption mapping/prioritization, experiment design, feature-request analysis, interview script, metrics dashboard
-- **Research**: competitor analysis, market sizing/segments, journey maps, personas, segmentation, sentiment analysis
-- **GTM**: ICP, GTM strategy/motions, beachhead segment, growth loops, battlecards
-- **Strategy**: product strategy/vision, SWOT, pricing, Porter’s 5 forces, PESTLE, business/lean/startup canvases, monetization, Ansoff, value proposition
-- **Toolkit**: NDA, privacy policy, resume review, grammar check
+- **Plan-only by default**: the AI won't edit files or run commands until you say **"go ahead"**
+- Asks **≤ 2** critical questions; otherwise assumes sensible defaults
+- Outputs default to **markdown**
+- Prefers existing commands and skills over inventing new formats
 
-If you’re adding new workflows, prefer:
+These defaults are defined in `CLAUDE.md` at the repo root.
 
-- a **command** in `.cursor/commands/<category>/...` for invocation + structure
-- a **skill** in `.cursor/skills/<category>/<skill-name>/SKILL.md` for the reusable playbook
+---
+
+## Repository structure
+
+```
+ccpm-os/
+├── CLAUDE.md                  # Workspace rules and defaults
+├── README.md
+├── commands/                  # Slash commands (workflows)
+│   ├── execution/             # Day-to-day PM execution
+│   ├── go-to-market/          # GTM planning and enablement
+│   ├── market-research/       # Research and analysis
+│   ├── marketing-growth/      # Positioning and growth
+│   ├── product-discovery/     # Discovery and ideation
+│   ├── product-strategy/      # Strategy and roadmaps
+│   └── toolkit/               # Utilities and personal tools
+├── skills/                    # Reusable playbooks (referenced by commands)
+│   ├── execution/
+│   ├── go-to-market/
+│   ├── market-research/
+│   ├── marketing-growth/
+│   ├── product-discovery/
+│   ├── product-strategy/
+│   └── toolkit/
+└── Cisco/                     # Cisco-specific context
+    └── CLAUDE.md              # UCS portfolio, Intersight, glossary
+```
+
+---
+
+## Commands
+
+### Execution (`commands/execution/`)
+
+| Command | Description |
+|---------|-------------|
+| `/meeting-notes` | Turn transcripts into decisions + action items |
+| `/write-prd` | Draft a PRD from an idea or problem statement |
+| `/write-stories` | Generate user stories and backlog items |
+| `/write-blog` | Draft a blog post |
+| `/test-scenarios` | Generate QA scenarios from requirements |
+| `/stakeholder-map` | Power/interest mapping + comms plan |
+| `/plan-okrs` | OKR brainstorming |
+| `/sprint` | Sprint planning |
+| `/pre-mortem` | Launch/initiative risk pre-mortem |
+| `/transform-roadmap` | Output roadmap → outcome roadmap |
+| `/email-response-short` | Draft a concise email reply |
+| `/email-response-long` | Draft a detailed email reply |
+| `/webex-announcement` | Generate Webex Adaptive Card JSON for product announcements |
+
+### Go-to-Market (`commands/go-to-market/`)
+
+| Command | Description |
+|---------|-------------|
+| `/plan-launch` | GTM launch plan |
+| `/growth-strategy` | Growth loops and motions |
+| `/battlecard` | Competitive battlecard |
+| `/sales-enablement` | Full sales + marketing enablement kit (9 deliverables) |
+
+### Market Research (`commands/market-research/`)
+
+| Command | Description |
+|---------|-------------|
+| `/research-users` | User research synthesis and plans |
+| `/analyze-feedback` | Sentiment and themes from feedback |
+| `/competitive-analysis` | Competitor analysis |
+| `/survey-analysis` | Deep B2B survey analysis with evidence-backed insights |
+| `/win-loss` | Win/loss deal analysis with competitive and segment breakdowns |
+
+### Marketing & Growth (`commands/marketing-growth/`)
+
+| Command | Description |
+|---------|-------------|
+| `/north-star` | Define North Star + input metrics |
+| `/market-product` | Positioning and value prop outputs |
+
+### Product Discovery (`commands/product-discovery/`)
+
+| Command | Description |
+|---------|-------------|
+| `/brainstorm` | Generate ideas for a problem space |
+| `/discover` | Structure discovery work |
+| `/interview` | Interview scripts and questions |
+| `/setup-metrics` | Metrics + dashboard setup |
+| `/triage-requests` | Analyze and cluster feature requests |
+
+### Product Strategy (`commands/product-strategy/`)
+
+| Command | Description |
+|---------|-------------|
+| `/strategy` | Product strategy canvas |
+| `/pricing` | Pricing analysis + options |
+| `/market-scan` | Market scan |
+| `/business-model` | Business model canvas |
+| `/value-proposition` | Value prop design |
+| `/product-roadmap` | Phased, dependency-driven roadmap (work backwards from goal) |
+| `/strategic-thinking` | First Principles + Pareto (80/20) analysis |
+
+### Toolkit (`commands/toolkit/`)
+
+| Command | Description |
+|---------|-------------|
+| `/proofread` | Grammar, logic, and flow check |
+| `/documentation` | Write, edit, or update product documentation |
+| `/teamspace-review` | Performance self-assessment from weekly reflections |
+| `/weekly-braindump` | Turn a brain dump into a structured weekly plan |
+
+---
+
+## Skills (70 playbooks)
+
+Skills are reusable playbooks that live in `skills/<category>/<skill-name>/SKILL.md`. Commands reference them automatically — you don't need to invoke skills directly.
+
+| Category | Skills |
+|----------|--------|
+| **Execution** (18) | `brainstorm-okrs`, `create-prd`, `dummy-dataset`, `email-response`, `job-stories`, `outcome-roadmap`, `pre-mortem`, `prioritization-frameworks`, `release-notes`, `retro`, `sprint-plan`, `stakeholder-map`, `summarize-meeting`, `test-scenarios`, `user-stories`, `webex-announcement`, `write-blog-post`, `wwas` |
+| **Product Strategy** (14) | `ansoff-matrix`, `business-model`, `lean-canvas`, `monetization-strategy`, `pestle-analysis`, `porters-five-forces`, `pricing-strategy`, `product-roadmap`, `product-strategy`, `product-vision`, `startup-canvas`, `strategic-thinking`, `swot-analysis`, `value-proposition` |
+| **Product Discovery** (12) | `analyze-feature-requests`, `brainstorm-experiments-existing`, `brainstorm-experiments-new`, `brainstorm-ideas-existing`, `brainstorm-ideas-new`, `identify-assumptions-existing`, `identify-assumptions-new`, `interview-script`, `metrics-dashboard`, `opportunity-solution-tree`, `prioritize-assumptions`, `prioritize-features`, `summarize-interview` |
+| **Market Research** (9) | `competitor-analysis`, `customer-journey-map`, `market-segments`, `market-sizing`, `sentiment-analysis`, `survey-analysis`, `user-personas`, `user-segmentation`, `win-loss` |
+| **Go-to-Market** (8) | `beachhead-segment`, `competitive-battlecard`, `gtm-motions`, `gtm-strategy`, `growth-loops`, `ideal-customer-profile`, `sales-enablement` |
+| **Marketing & Growth** (5) | `marketing-ideas`, `north-star-metric`, `positioning-ideas`, `product-name`, `value-prop-statements` |
+| **Toolkit** (4) | `documentation`, `grammar-check`, `teamspace-review`, `weekly-braindump` |
+
+---
+
+## Adding new commands and skills
+
+When creating new workflows, follow this pattern:
+
+1. **Command** → `commands/<category>/<command-name>.md`
+   - YAML frontmatter with `description` and `argument-hint`
+   - Title: `# /command-name -- Short Label`
+   - Invocation examples
+   - 4-step workflow (accept input → apply skill → generate output → offer follow-ups)
+   - Notes section
+
+2. **Skill** → `skills/<category>/<skill-name>/SKILL.md`
+   - YAML frontmatter with `name` and `description`
+   - Purpose, input arguments, step-by-step process, output format, guidelines
+
+Commands reference skills by name in their workflow (e.g., "Apply the **create-prd** skill").
 
 ---
 
 ## Output structure (per project)
 
-When creating new work, default to:
+When creating project-specific work, outputs default to:
 
-- `Cisco/<project>/index.md`
-- `Cisco/<project>/templates/`
-- `Cisco/<project>/playbooks/`
-- `Cisco/<project>/examples/`
-- `Cisco/<project>/glossary.md` (optional)
-
----
-
-## Working style / quality bar
-
-Docs should be:
-
-- scannable headings + checklists
-- clear audience + intended use
-- include steps and at least one example
-- if meeting/decision-oriented: include **Decisions**, **Action items** (owner + due date if known), **Open questions**
+```
+Cisco/<project>/
+├── index.md
+├── templates/
+├── playbooks/
+├── examples/
+└── glossary.md          # optional
+```
 
 ---
 
-## Notes
+## Quality bar
 
-- This repo is not currently a git repository (as detected by the environment), so treat outputs as local artifacts unless you later add version control.
+All outputs should be:
+
+- Scannable headings + checklists
+- Clear audience + intended use
+- Include steps and at least one example
+- If meeting/decision-oriented: include **Decisions**, **Action items** (owner + due date), **Open questions**
+
+---
+
+## Cisco Compute reference
+
+`Cisco/CLAUDE.md` provides internal context for Cisco Compute: UCS portfolio map, Intersight framing, glossary, and stakeholder triage questions. Use this for consistent language across PRDs, strategy docs, and stakeholder updates.
