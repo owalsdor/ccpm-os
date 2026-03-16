@@ -16,7 +16,7 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 git clone https://github.com/<your-org>/ccpm-os.git
 ```
 
-2. Open the cloned folder in **Cursor** (`File → Open Folder`).
+2. Copy /commands, /skills and CLAUDE.md to .cursor.
 
 3. That's it. Cursor automatically detects:
    - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
@@ -24,6 +24,8 @@ git clone https://github.com/<your-org>/ccpm-os.git
    - **Rules** in `CLAUDE.md` — applied as workspace-level instructions
 
 4. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
+
+5. Build your own workspace like the /Cisco, add a CLAUDE.md under this project like the example one and start working.
 
 ### Manual setup (any AI editor)
 
