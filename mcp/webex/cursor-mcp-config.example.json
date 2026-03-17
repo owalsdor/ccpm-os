@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "webex": {
+      "command": "node",
+      "args": [
+        "/ABSOLUTE/PATH/TO/ccpm-os/mcp/webex/dist/index.js",
+        "--webex-token=YOUR_WEBEX_PERSONAL_ACCESS_TOKEN"
+      ]
+    }
+  }
+}

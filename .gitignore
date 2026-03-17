@@ -1,3 +1,4 @@
 .DS_Store
 agent-transcripts/
 **/agent-transcripts/*
+.cursor/
