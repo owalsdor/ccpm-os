@@ -13,7 +13,7 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/<your-org>/ccpm-os.git
+git clone https://github.com/owalsdor/ccpm-os.git
 ```
 
 2. Copy /commands, /skills and CLAUDE.md to .cursor.
