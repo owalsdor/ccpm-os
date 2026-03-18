@@ -16,7 +16,7 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 git clone https://github.com/owalsdor/ccpm-os.git
 ```
 
-2. Copy /commands, /skills and CLAUDE.md to .cursor.
+2. Copy the subfolders of /commands, /skills to .cursor/commands and .cursor/skills as well as CLAUDE.md to .cursor.
 
 3. That's it. Cursor automatically detects:
    - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
