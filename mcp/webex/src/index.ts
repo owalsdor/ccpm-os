@@ -2,10 +2,16 @@
 /**
  * Webex MCP Server for Cursor
  *
- * Token can be provided in three ways (no need for Cursor MCP config env):
- * 1. Command: pass as argument, e.g. node dist/index.js --webex-token=TOKEN or node dist/index.js TOKEN
- * 2. Message: pass webexAccessToken when calling any tool (e.g. paste token when the AI asks)
- * 3. Env: WEBEX_ACCESS_TOKEN (optional fallback)
+ * Token resolution (highest priority first):
+ * 1. Per-tool: pass webexAccessToken in the tool call (e.g. paste token when the AI asks)
+ * 2. CLI arg:  --webex-token=TOKEN or positional TOKEN
+ * 3. OAuth:    stored tokens from `auth login` (auto-refreshes)
+ * 4. Env:      WEBEX_ACCESS_TOKEN
+ *
+ * CLI subcommands:
+ *   auth setup  --client-id=CID --client-secret=CSECRET  Save OAuth client credentials
+ *   auth login                                            Browser-based OAuth login
+ *   auth status                                           Show token health
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -17,9 +23,64 @@ import {
   createMessage,
 } from "./webex-client.js";
 import { analyzePendingFollowups } from "./pending-actions.js";
+import { authorize, getTokenStatus } from "./oauth.js";
+import { saveClientConfig, getStoreDir } from "./token-store.js";
 
-// Parse token from command line so it can be passed in the Cursor MCP command (no env in config)
+// ---------------------------------------------------------------------------
+// CLI: handle `auth` subcommand before starting the MCP server
+// ---------------------------------------------------------------------------
 const argv = process.argv.slice(2);
+
+if (argv[0] === "auth") {
+  const sub = argv[1];
+
+  if (sub === "setup") {
+    let clientId = "";
+    let clientSecret = "";
+    let redirectUri = "http://localhost:11424/callback";
+    let scopes = "spark:rooms_read spark:messages_read spark:messages_write spark:people_read";
+
+    for (const arg of argv.slice(2)) {
+      if (arg.startsWith("--client-id=")) clientId = arg.slice("--client-id=".length).trim();
+      else if (arg.startsWith("--client-secret=")) clientSecret = arg.slice("--client-secret=".length).trim();
+      else if (arg.startsWith("--redirect-uri=")) redirectUri = arg.slice("--redirect-uri=".length).trim();
+      else if (arg.startsWith("--scopes=")) scopes = arg.slice("--scopes=".length).trim();
+    }
+
+    if (!clientId || !clientSecret) {
+      console.error("Usage: node dist/index.js auth setup --client-id=CID --client-secret=CSECRET");
+      process.exit(1);
+    }
+
+    saveClientConfig({ client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri, scopes });
+    console.log(`OAuth client credentials saved to ${getStoreDir()}/config.json`);
+    console.log("Next step: node dist/index.js auth login");
+    process.exit(0);
+  }
+
+  if (sub === "login") {
+    try {
+      await authorize();
+    } catch (err) {
+      console.error("Authorization failed:", err instanceof Error ? err.message : err);
+      process.exit(1);
+    }
+    process.exit(0);
+  }
+
+  if (sub === "status") {
+    const status = getTokenStatus();
+    console.log(JSON.stringify(status, null, 2));
+    process.exit(0);
+  }
+
+  console.error("Unknown auth subcommand. Usage: node dist/index.js auth [setup|login|status]");
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
+// Parse token from CLI flags (legacy / manual mode)
+// ---------------------------------------------------------------------------
 for (const arg of argv) {
   if (arg.startsWith("--webex-token=")) {
     process.env.WEBEX_ACCESS_TOKEN = arg.slice("--webex-token=".length).trim();
@@ -30,9 +91,8 @@ for (const arg of argv) {
     break;
   }
 }
-// Positional token: exactly two args = script path + token (e.g. args: ["/path/to/dist/index.js", "TOKEN"])
-if (!process.env.WEBEX_ACCESS_TOKEN && argv.length === 2 && !argv[1].startsWith("-")) {
-  process.env.WEBEX_ACCESS_TOKEN = argv[1].trim();
+if (!process.env.WEBEX_ACCESS_TOKEN && argv.length === 1 && !argv[0].startsWith("-")) {
+  process.env.WEBEX_ACCESS_TOKEN = argv[0].trim();
 }
 
 const server = new McpServer({
@@ -259,6 +319,29 @@ server.registerTool(
       });
       const summary = `Message sent. id: ${message.id}, roomId: ${message.roomId}, created: ${message.created}`;
       return { content: [{ type: "text" as const, text: summary }] };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      return {
+        content: [{ type: "text" as const, text: `Error: ${message}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// --- Auth status ---
+server.registerTool(
+  "webex_auth_status",
+  {
+    title: "Webex Auth Status",
+    description:
+      "Check the health of Webex OAuth tokens — whether they're valid, when they expire, and whether auto-refresh is active. No token parameter needed.",
+    inputSchema: z.object({}),
+  },
+  async () => {
+    try {
+      const status = getTokenStatus();
+      return { content: [{ type: "text" as const, text: JSON.stringify(status, null, 2) }] };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       return {
