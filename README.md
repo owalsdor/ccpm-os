@@ -2,7 +2,7 @@
 
 A **Markdown-first operating system for Product Managers** built for [Cursor](https://cursor.sh). Reusable slash commands (workflows) and skills (playbooks/templates) that turn rough inputs into high-quality PM artifacts — fast, with minimal back-and-forth.
 
-**40 commands** across 7 categories. **70 skills** covering strategy, execution, research, GTM, and more.
+**41 commands** across 7 categories. **70 skills** covering strategy, execution, research, GTM, and more. **1 MCP server** (Webex).
 
 ---
 
@@ -23,9 +23,11 @@ git clone https://github.com/owalsdor/ccpm-os.git
    - **Skills** in `skills/` — referenced by commands automatically
    - **Rules** in `CLAUDE.md` — applied as workspace-level instructions
 
-4. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
+4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
-5. Build your own workspace like the /Cisco, add a CLAUDE.md under this project like the example one and start working.
+5. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
+
+6. Build your own workspace like the /Cisco, add a CLAUDE.md under this project like the example one and start working.
 
 ### Manual setup (any AI editor)
 
@@ -76,6 +78,8 @@ ccpm-os/
 │   ├── product-discovery/
 │   ├── product-strategy/
 │   └── toolkit/
+├── mcp/                       # MCP servers (Model Context Protocol)
+│   └── webex/                 # Webex messaging MCP server
 └── Cisco/                     # Cisco-specific context
     └── CLAUDE.md              # UCS portfolio, Intersight, glossary
 ```
@@ -158,6 +162,7 @@ ccpm-os/
 | `/documentation` | Write, edit, or update product documentation |
 | `/teamspace-review` | Performance self-assessment from weekly reflections |
 | `/weekly-braindump` | Turn a brain dump into a structured weekly plan |
+| `/webex-ai-followups` | Scan Webex DMs for pending follow-ups via MCP and return actionable lists |
 
 ---
 
@@ -169,11 +174,33 @@ Skills are reusable playbooks that live in `skills/<category>/<skill-name>/SKILL
 |----------|--------|
 | **Execution** (18) | `brainstorm-okrs`, `create-prd`, `dummy-dataset`, `email-response`, `job-stories`, `outcome-roadmap`, `pre-mortem`, `prioritization-frameworks`, `release-notes`, `retro`, `sprint-plan`, `stakeholder-map`, `summarize-meeting`, `test-scenarios`, `user-stories`, `webex-announcement`, `write-blog-post`, `wwas` |
 | **Product Strategy** (14) | `ansoff-matrix`, `business-model`, `lean-canvas`, `monetization-strategy`, `pestle-analysis`, `porters-five-forces`, `pricing-strategy`, `product-roadmap`, `product-strategy`, `product-vision`, `startup-canvas`, `strategic-thinking`, `swot-analysis`, `value-proposition` |
-| **Product Discovery** (12) | `analyze-feature-requests`, `brainstorm-experiments-existing`, `brainstorm-experiments-new`, `brainstorm-ideas-existing`, `brainstorm-ideas-new`, `identify-assumptions-existing`, `identify-assumptions-new`, `interview-script`, `metrics-dashboard`, `opportunity-solution-tree`, `prioritize-assumptions`, `prioritize-features`, `summarize-interview` |
+| **Product Discovery** (13) | `analyze-feature-requests`, `brainstorm-experiments-existing`, `brainstorm-experiments-new`, `brainstorm-ideas-existing`, `brainstorm-ideas-new`, `identify-assumptions-existing`, `identify-assumptions-new`, `interview-script`, `metrics-dashboard`, `opportunity-solution-tree`, `prioritize-assumptions`, `prioritize-features`, `summarize-interview` |
 | **Market Research** (9) | `competitor-analysis`, `customer-journey-map`, `market-segments`, `market-sizing`, `sentiment-analysis`, `survey-analysis`, `user-personas`, `user-segmentation`, `win-loss` |
-| **Go-to-Market** (8) | `beachhead-segment`, `competitive-battlecard`, `gtm-motions`, `gtm-strategy`, `growth-loops`, `ideal-customer-profile`, `sales-enablement` |
+| **Go-to-Market** (7) | `beachhead-segment`, `competitive-battlecard`, `gtm-motions`, `gtm-strategy`, `growth-loops`, `ideal-customer-profile`, `sales-enablement` |
 | **Marketing & Growth** (5) | `marketing-ideas`, `north-star-metric`, `positioning-ideas`, `product-name`, `value-prop-statements` |
 | **Toolkit** (4) | `documentation`, `grammar-check`, `teamspace-review`, `weekly-braindump` |
+
+---
+
+## MCP Servers
+
+MCP (Model Context Protocol) servers extend Cursor with live tool access. They run as local processes and communicate over stdio.
+
+### Webex (`mcp/webex/`)
+
+A Node.js MCP server that connects Cursor to the Webex REST API for messaging workflows.
+
+| Tool | Description |
+|------|-------------|
+| `webex_list_spaces` | List rooms/spaces. Optional filters: `max`, `type` (direct/group), `sortBy`. |
+| `webex_get_messages` | Get messages by `roomId` or `personId`. Optional: `max`, `beforeMessage`. |
+| `webex_send_message` | Send a message to a room or person. Supports plain text and markdown. |
+| `webex_get_pending_followups` | Scan recent direct spaces and return pending follow-ups with suggested replies. |
+| `webex_auth_status` | Check OAuth token health — expiry, refresh state. |
+
+**Authentication:** OAuth (recommended, auto-refreshes for ~90 days) or personal access token (expires every 12 hours).
+
+**Setup:** See [`mcp/webex/README.md`](mcp/webex/README.md) for build instructions and [`mcp/webex/USER_GUIDE.md`](mcp/webex/USER_GUIDE.md) for a full walkthrough.
 
 ---
 
