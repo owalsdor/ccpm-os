@@ -2,3 +2,16 @@
 agent-transcripts/
 **/agent-transcripts/*
 .cursor/
+
+# CCPM Scheduler (Electron) — dependencies, packaged apps, installers
+scheduler-app/node_modules/
+scheduler-app/dist/
+scheduler-app/out/
+scheduler-app/*.dmg
+scheduler-app/*.dmg.blockmap
+scheduler-app/*.zip
+scheduler-app/*.exe
+scheduler-app/*.AppImage
+scheduler-app/*.deb
+scheduler-app/*.rpm
+scheduler-app/*.snap
