@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>CCPM-OS Scheduler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-top-bar">
+      <div class="app-bar-row">
+        <button type="button" id="nav-back" class="icon-button" hidden aria-label="Back to dashboard">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+          </svg>
+        </button>
+        <div class="app-bar-titles">
+          <h1 id="app-title">CCPM-OS Scheduler</h1>
+        </div>
+        <div class="app-bar-actions">
+          <button
+            type="button"
+            id="btn-settings"
+            class="icon-button"
+            aria-label="Settings"
+            title="Settings"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.07.63-.07.94s.02.63.06.93l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+              />
+            </svg>
+          </button>
+          <button type="button" id="btn-history" class="secondary tonal-nav">Execution history</button>
+        </div>
+      </div>
+      <div class="source-row" id="source-row">
+        <div class="commands-source-inline">
+          <button
+            type="button"
+            id="commands-source-btn"
+            class="commands-source-btn"
+            aria-label="Open commands folder in file manager"
+            title=""
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+              />
+            </svg>
+          </button>
+          <span id="commands-source-path" class="commands-source-path" title=""></span>
+        </div>
+      </div>
+    </header>
+
+    <section id="view-settings" class="view" aria-label="Settings">
+      <div class="settings-layout panel">
+        <h2>Settings</h2>
+        <p class="settings-lead">
+          Commands folder and Webex output are stored locally in this app’s config (not in the repo).
+        </p>
+
+        <div class="settings-block">
+          <h3 class="modal-section-title">Commands folder</h3>
+          <p id="settings-commands-path" class="settings-path"></p>
+          <button type="button" id="settings-pick-folder" class="secondary">
+            Choose folder…
+          </button>
+        </div>
+
+        <div class="settings-block">
+          <h3 class="modal-section-title">Webex output</h3>
+          <p class="field-hint settings-hint">
+            Tasks set to “Webex” send run results after each execution. Use a bot or personal token from
+            <a href="https://developer.webex.com/docs/getting-started" target="_blank" rel="noopener noreferrer"
+              >developer.webex.com</a
+            >.
+            Bots usually post to a space: add your bot to a Webex space, copy that space’s Room ID from space settings, and paste it below. Email alone often fails for bot tokens.
+          </p>
+          <label for="settings-webex-room">Room ID (recommended for bots)</label>
+          <input
+            id="settings-webex-room"
+            type="text"
+            autocomplete="off"
+            placeholder="Y2lzY29zcGFyazovL3VzL1JPT00v..."
+            spellcheck="false"
+          />
+          <label for="settings-webex-email">Recipient email (optional if room ID is set)</label>
+          <input
+            id="settings-webex-email"
+            type="email"
+            autocomplete="email"
+            placeholder="colleague@example.com"
+          />
+          <label for="settings-webex-token">Access token</label>
+          <input
+            id="settings-webex-token"
+            type="password"
+            autocomplete="off"
+            placeholder="Paste token (leave blank to keep current)"
+            spellcheck="false"
+          />
+          <p id="settings-webex-token-hint" class="field-hint"></p>
+        </div>
+
+        <div class="settings-actions">
+          <button type="button" id="settings-save" class="primary">Save settings</button>
+          <button type="button" id="settings-test-webex" class="secondary">Send test message to Webex</button>
+          <p id="settings-save-status" class="settings-save-status" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <main id="view-dashboard" class="view view--active" aria-label="Task dashboard">
+      <div id="task-grid" class="task-grid"></div>
+      <p id="dashboard-empty" class="dashboard-empty hidden">
+        No scheduled tasks yet. Use the button below to create one.
+      </p>
+      <div
+        class="stay-awake-corner"
+        title="While on, prevents idle system sleep while this app is open. Does not change your Energy Saver settings."
+      >
+        <span class="stay-awake-label" id="stay-awake-label">Stay awake</span>
+        <button
+          type="button"
+          id="stay-awake-switch"
+          class="stay-awake-switch"
+          role="switch"
+          aria-checked="false"
+          aria-labelledby="stay-awake-label"
+        ></button>
+      </div>
+    </main>
+
+    <section id="view-history" class="view" aria-label="Execution history">
+      <div class="history-layout panel">
+        <h2>Execution history</h2>
+        <p class="history-retention-hint">Outputs are kept for 30 days, then removed automatically.</p>
+        <label class="inline-control">
+          <input id="debug-toggle" type="checkbox" />
+          Show debug logs
+        </label>
+        <div id="debug-logs-wrap" class="debug-logs-wrap hidden">
+          <pre id="logs" class="debug-logs-pre"></pre>
+        </div>
+        <div class="execution-table-wrap">
+          <table class="execution-table" aria-label="Past executions">
+            <thead>
+              <tr>
+                <th scope="col">Command</th>
+                <th scope="col">Status</th>
+                <th scope="col">Time</th>
+                <th scope="col"><span class="visually-hidden">Details</span></th>
+              </tr>
+            </thead>
+            <tbody id="execution-history-body"></tbody>
+          </table>
+          <p id="history-empty" class="history-empty hidden">No executions in the last 30 days.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Execution output (shared with dashboard “Show output”) -->
+    <div id="output-modal-overlay" class="modal-overlay hidden" aria-hidden="true">
+      <div
+        class="modal-sheet modal-sheet--output"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="output-modal-heading"
+      >
+        <div class="modal-header">
+          <h2 id="output-modal-heading">Execution details</h2>
+          <button type="button" id="output-modal-close" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body output-modal-body">
+          <dl class="output-modal-meta">
+            <div>
+              <dt>Command</dt>
+              <dd id="output-modal-command"></dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd id="output-modal-status"></dd>
+            </div>
+            <div>
+              <dt>Run at</dt>
+              <dd id="output-modal-time"></dd>
+            </div>
+          </dl>
+          <label for="output-modal-text">Output</label>
+          <textarea id="output-modal-text" readonly rows="18" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create / edit task -->
+    <div id="modal-overlay" class="modal-overlay hidden" aria-hidden="true">
+      <div
+        class="modal-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-task-title"
+      >
+        <div class="modal-header">
+          <h2 id="modal-task-title">New scheduled task</h2>
+          <button type="button" id="modal-close" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <section class="modal-commands">
+            <h3 class="modal-section-title">Available commands</h3>
+            <input id="command-search" type="text" placeholder="Search commands..." />
+            <ul id="command-list"></ul>
+          </section>
+          <section class="modal-form-wrap">
+            <form id="schedule-form" class="schedule-form">
+              <label for="command-select">Command</label>
+              <select id="command-select" required></select>
+
+              <label for="model-select">Model</label>
+              <select id="model-select">
+                <option value="">Default (agent chooses)</option>
+              </select>
+              <p class="field-hint" id="model-hint">Loads available models from the Cursor agent after startup.</p>
+
+              <label for="user-input">Arguments / context</label>
+              <textarea id="user-input" rows="5" placeholder="Paste input/context for the command"></textarea>
+
+              <label for="output-destination-select">Output destination</label>
+              <select id="output-destination-select">
+                <option value="scheduler">Scheduler app</option>
+                <option value="webex">Webex</option>
+              </select>
+              <p class="field-hint">
+                Scheduler app keeps output here; Webex sends results to the recipient configured in Settings.
+              </p>
+
+              <label for="frequency-select">Frequency</label>
+              <select id="frequency-select">
+                <option value="once">Once</option>
+                <option value="daily">Every day</option>
+                <option value="weekly">Every week</option>
+              </select>
+
+              <div id="recurrence-once" class="recurrence-panel">
+                <label for="scheduled-at">Date and time</label>
+                <input id="scheduled-at" type="datetime-local" />
+              </div>
+
+              <div id="recurrence-daily" class="recurrence-panel hidden">
+                <label for="recurrence-time-daily">Time of day</label>
+                <input id="recurrence-time-daily" type="time" value="09:00" />
+              </div>
+
+              <div id="recurrence-weekly" class="recurrence-panel hidden">
+                <span class="weekday-toggle-label">Days</span>
+                <div
+                  id="weekday-toggle-row"
+                  class="weekday-toggle-row"
+                  role="group"
+                  aria-label="Days of week"
+                >
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="0"
+                    aria-pressed="false"
+                    aria-label="Sunday"
+                  >
+                    S
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="1"
+                    aria-pressed="false"
+                    aria-label="Monday"
+                  >
+                    M
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="2"
+                    aria-pressed="false"
+                    aria-label="Tuesday"
+                  >
+                    T
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="3"
+                    aria-pressed="false"
+                    aria-label="Wednesday"
+                  >
+                    W
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="4"
+                    aria-pressed="false"
+                    aria-label="Thursday"
+                  >
+                    T
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="5"
+                    aria-pressed="false"
+                    aria-label="Friday"
+                  >
+                    F
+                  </button>
+                  <button
+                    type="button"
+                    class="weekday-toggle"
+                    data-weekday="6"
+                    aria-pressed="false"
+                    aria-label="Saturday"
+                  >
+                    S
+                  </button>
+                </div>
+                <label for="recurrence-time-weekly">Time</label>
+                <input id="recurrence-time-weekly" type="time" value="09:00" />
+                <div id="recurrence-interval-row">
+                  <label for="recurrence-interval-weeks">Repeat every (weeks)</label>
+                  <input
+                    id="recurrence-interval-weeks"
+                    type="number"
+                    min="1"
+                    max="8"
+                    value="1"
+                    title="Shown when only one day is selected. 1 = weekly, 2 = every two weeks."
+                  />
+                </div>
+              </div>
+
+              <p id="recurrence-preview" class="field-hint recurrence-preview hidden"></p>
+
+              <label for="permission-mode">Permission handling</label>
+              <select id="permission-mode">
+                <option value="allow-always">Auto approve (allow-always)</option>
+                <option value="allow-once">Auto approve once (allow-once)</option>
+                <option value="reject-once">Reject (test mode)</option>
+              </select>
+
+              <button type="submit" id="schedule-submit">Create task</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" id="fab-create" class="fab" aria-label="Create new task">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      </svg>
+    </button>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>

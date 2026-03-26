@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>CCPM-OS Scheduler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="app-top-bar">
+      <div class="app-bar-row">
+        <button type="button" id="nav-back" class="icon-button" hidden aria-label="Back to dashboard">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+          </svg>
+        </button>
+        <div class="app-bar-titles">
+          <h1 id="app-title">CCPM-OS Scheduler</h1>
+        </div>
+        <div class="app-bar-actions">
+          <button type="button" id="btn-history" class="secondary tonal-nav">Execution history</button>
+        </div>
+      </div>
+      <div class="source-row" id="source-row">
+        <div class="commands-source-inline">
+          <button
+            type="button"
+            id="commands-source-btn"
+            class="commands-source-btn"
+            aria-label="Open commands folder in file manager"
+            title=""
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+              />
+            </svg>
+          </button>
+          <span id="commands-source-path" class="commands-source-path" title=""></span>
+          <button
+            type="button"
+            id="commands-source-edit"
+            class="commands-source-edit"
+            aria-label="Change commands folder"
+            title="Change folder"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="view-dashboard" class="view view--active" aria-label="Task dashboard">
+      <div id="task-grid" class="task-grid"></div>
+      <p id="dashboard-empty" class="dashboard-empty hidden">
+        No scheduled tasks yet. Use the button below to create one.
+      </p>
+    </main>
+
+    <section id="view-history" class="view" aria-label="Execution history">
+      <div class="history-layout panel">
+        <h2>Execution history</h2>
+        <p class="history-retention-hint">Outputs are kept for 30 days, then removed automatically.</p>
+        <label class="inline-control">
+          <input id="debug-toggle" type="checkbox" />
+          Show debug logs
+        </label>
+        <div id="debug-logs-wrap" class="debug-logs-wrap hidden">
+          <pre id="logs" class="debug-logs-pre"></pre>
+        </div>
+        <div class="execution-table-wrap">
+          <table class="execution-table" aria-label="Past executions">
+            <thead>
+              <tr>
+                <th scope="col">Command</th>
+                <th scope="col">Status</th>
+                <th scope="col">Time</th>
+                <th scope="col"><span class="visually-hidden">Details</span></th>
+              </tr>
+            </thead>
+            <tbody id="execution-history-body"></tbody>
+          </table>
+          <p id="history-empty" class="history-empty hidden">No executions in the last 30 days.</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="output-modal-overlay" class="modal-overlay hidden" aria-hidden="true">
+      <div
+        class="modal-sheet modal-sheet--output"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="output-modal-heading"
+      >
+        <div class="modal-header">
+          <h2 id="output-modal-heading">Execution details</h2>
+          <button type="button" id="output-modal-close" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body output-modal-body">
+          <dl class="output-modal-meta">
+            <div>
+              <dt>Command</dt>
+              <dd id="output-modal-command"></dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd id="output-modal-status"></dd>
+            </div>
+            <div>
+              <dt>Run at</dt>
+              <dd id="output-modal-time"></dd>
+            </div>
+          </dl>
+          <label for="output-modal-text">Output</label>
+          <textarea id="output-modal-text" readonly rows="18" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden" aria-hidden="true">
+      <div
+        class="modal-sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-task-title"
+      >
+        <div class="modal-header">
+          <h2 id="modal-task-title">New scheduled task</h2>
+          <button type="button" id="modal-close" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <section class="modal-commands">
+            <h3 class="modal-section-title">Available commands</h3>
+            <input id="command-search" type="text" placeholder="Search commands..." />
+            <ul id="command-list"></ul>
+          </section>
+          <section class="modal-form-wrap">
+            <form id="schedule-form" class="schedule-form">
+              <label for="command-select">Command</label>
+              <select id="command-select" required></select>
+
+              <label for="model-select">Model</label>
+              <select id="model-select">
+                <option value="">Default (agent chooses)</option>
+              </select>
+              <p class="field-hint" id="model-hint">Loads available models from the Cursor agent after startup.</p>
+
+              <label for="user-input">Arguments / context</label>
+              <textarea id="user-input" rows="5" placeholder="Paste input/context for the command"></textarea>
+
+              <label for="scheduled-at">Schedule time</label>
+              <input id="scheduled-at" type="datetime-local" required />
+
+              <label for="permission-mode">Permission handling</label>
+              <select id="permission-mode">
+                <option value="allow-always">Auto approve (allow-always)</option>
+                <option value="allow-once">Auto approve once (allow-once)</option>
+                <option value="reject-once">Reject (test mode)</option>
+              </select>
+
+              <button type="submit" id="schedule-submit">Create task</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" id="fab-create" class="fab" aria-label="Create new task">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+      </svg>
+    </button>
+
+    <script src="./src/renderer.js"></script>
+  </body>
+</html>
