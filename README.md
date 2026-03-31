@@ -1,4 +1,4 @@
-# CCPM-OS — Product Manager Operating System
+# CCPM-OS — An AI Product Manager Operating System
 
 A **Markdown-first operating system for Product Managers** built for [Cursor](https://cursor.sh). Reusable slash commands (workflows) and skills (playbooks/templates) that turn rough inputs into high-quality PM artifacts — fast, with minimal back-and-forth.
 
