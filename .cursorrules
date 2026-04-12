@@ -12,9 +12,12 @@ Markdown-first **operating system for product managers** (templates, playbooks, 
 ## Project structure (per project)
 For each new project, create a folder under `.cursor/Cisco/`:
 - `.cursor/Cisco/<project>/index.md`
-- `.cursor/Cisco/<project>/templates/`
+- `.cursor/Cisco/<project>/meetings/`
 - `.cursor/Cisco/<project>/playbooks/`
 - `.cursor/Cisco/<project>/examples/`
+- `.cursor/Cisco/<project>/slides/`
+- `.cursor/Cisco/<project>/process/`
+- `.cursor/Cisco/<project>/files/`
 - `.cursor/Cisco/<project>/glossary.md` (optional)
 
 ## Quality bar (lightweight)
