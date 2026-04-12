@@ -19,22 +19,23 @@ git clone https://github.com/owalsdor/ccpm-os.git
 2. Copy the subfolders of /commands, /skills and /rules to .cursor/commands, .cursor/skills and .cursor/rules. Copy .cursorrules to the same level as .cursor.
 
 3. That's it. Cursor automatically detects:
-   - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
-   - **Skills** in `skills/` — referenced by commands automatically
-   - **Rules** in `.cursorrules` and `rules/` — applied as workspace-level and project-level instructions 
+   - **Commands** in **`.cursor/commands/`** — available as slash commands in chat (type `/` to see them)
+   - **Skills** in **`.cursor/skills/`** — referenced by commands automatically
+   - **Workspace rules** in **`.cursorrules`** (repo root, next to `.cursor/`)
+   - **Scoped rules** in **`.cursor/rules/*.mdc`** — e.g. file-specific or folder-specific instructions (see [Cursor rules](#cursor-rules) below)
 
 4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
 5. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
 
-6. Build your own workspace like the /Cisco, add a CLAUDE.md under this project like the example one and start working.
+6. For **Cisco Compute** work, use **`.cursor/Cisco/`** only: maintain **`.cursor/Cisco/CLAUDE.md`** (portfolio vocabulary, triage questions, links) and create per-project folders under **`.cursor/Cisco/<project>/`**. The [compute.mdc](#computemdc-cisco-compute) rule applies when you work in that tree.
 
 ### Manual setup (any AI editor)
 
 If you're not using Cursor, you can still use the skills and commands as prompt templates:
 
 1. Clone the repo
-2. Browse `commands/` for workflow prompts and `skills/` for detailed playbooks
+2. Browse **repo-root** `commands/` and `skills/` in the clone (the same content you would copy into `.cursor/commands/` and `.cursor/skills/` for Cursor)
 3. Copy-paste the content into your AI tool of choice
 
 ---
@@ -50,7 +51,7 @@ If you're not using Cursor, you can still use the skills and commands as prompt 
 - **Plan-only by default**: the AI won't edit files or run commands until you say **"go ahead"**
 - Asks **≤ 2** critical questions; otherwise assumes sensible defaults
 - Outputs default to **markdown**
-- Prefers existing commands and skills over inventing new formats
+- Prefers existing commands and skills under **`.cursor/commands/`** and **`.cursor/skills/`** over inventing new formats
 
 These defaults are defined in `.cursorrules` at the repo root.
 
@@ -62,17 +63,21 @@ These defaults are defined in `.cursorrules` at the repo root.
 ccpm-os/
 ├── .cursorrules                   # Workspace rules and defaults
 ├── README.md
-├── .cursor
-    ├── rules/                     # Rules for Cursor
-    │   ├── compute.mdc/           # Cisco Compute specific rules
-    ├── commands/                  # Slash commands (workflows)
-    │   ├── execution/             # Day-to-day PM execution
-    │   ├── go-to-market/          # GTM planning and enablement
-    │   ├── market-research/       # Research and analysis
-    │   ├── marketing-growth/      # Positioning and growth
-    │   ├── product-discovery/     # Discovery and ideation
-    │   ├── product-strategy/      # Strategy and roadmaps
-    │   └── toolkit/               # Utilities and personal tools
+├── commands/                      # Source in repo (copy into .cursor/commands for Cursor)
+├── skills/
+├── mcp/                           # MCP servers (repo root); e.g. webex/, airtable/
+│   └── webex/
+├── .cursor/
+    ├── rules/                     # Scoped Cursor rules (.mdc)
+    │   └── compute.mdc            # Cisco Compute — activates under .cursor/Cisco/**
+    ├── commands/                  # Slash commands (workflows), after copy from repo
+    │   ├── execution/
+    │   ├── go-to-market/
+    │   ├── market-research/
+    │   ├── marketing-growth/
+    │   ├── product-discovery/
+    │   ├── product-strategy/
+    │   └── toolkit/
     ├── skills/                    # Reusable playbooks (referenced by commands)
     │   ├── execution/
     │   ├── go-to-market/
@@ -81,17 +86,40 @@ ccpm-os/
     │   ├── product-discovery/
     │   ├── product-strategy/
     │   └── toolkit/
-    ├── mcp/                       # MCP servers (Model Context Protocol)
-    │   └── webex/                 # Webex messaging MCP server
-    └── Cisco/                     # Cisco-specific context
-        └── CLAUDE.md              # UCS portfolio, Intersight, glossary
+    └── Cisco/                     # Local Cisco projects + context (not repo-root Cisco/)
+        ├── CLAUDE.md              # Portfolio: UCS, Intersight, glossary (you maintain)
+        └── <project>/             # Per-project: index, templates, playbooks, examples, …
+            ├── index.md
+            ├── templates/
+            ├── playbooks/
+            ├── examples/
+            └── glossary.md        # optional
 ```
+
+---
+
+## Cursor rules
+
+Files in **`.cursor/rules/`** use the **`.mdc`** extension. Each file is a **scoped rule**: YAML **frontmatter** (typically `description`, `globs`, `alwaysApply`) plus markdown instructions Cursor merges when the scope matches (for example, when you edit files under a given path).
+
+**Add a new rule:** create **`.cursor/rules/<name>.mdc`**, set `globs` (or `alwaysApply: true` for global), and write the body.
+
+### compute.mdc (Cisco Compute)
+
+[`compute.mdc`](rules/compute.mdc) applies when the task touches files under **`.cursor/Cisco/`** (glob: `.cursor/Cisco/**`; `alwaysApply: false`). It tells the AI to:
+
+- Treat **“Cisco”** in this workflow as **`.cursor/Cisco/` only** — not a root-level `Cisco/` folder for project work.
+- Read **`.cursor/Cisco/CLAUDE.md`** first when it exists (portfolio scope, UCS / fabric / Intersight framing, vocabulary, triage questions, your links).
+- Use the per-project layout **`.cursor/Cisco/<project>/`** (`index.md`, `templates/`, `playbooks/`, `examples/`, optional `glossary.md`).
+- Follow **`.cursorrules`** and prefer **`.cursor/commands/`** and **`.cursor/skills/`** for PM OS workflows.
+
+See also [Cisco Compute reference](#cisco-compute-reference) below.
 
 ---
 
 ## Commands
 
-### Execution (`commands/execution/`)
+### Execution (`.cursor/commands/execution/`)
 
 | Command | Description |
 |---------|-------------|
@@ -109,7 +137,7 @@ ccpm-os/
 | `/email-response-long` | Draft a detailed email reply |
 | `/webex-announcement` | Generate Webex Adaptive Card JSON for product announcements |
 
-### Go-to-Market (`commands/go-to-market/`)
+### Go-to-Market (`.cursor/commands/go-to-market/`)
 
 | Command | Description |
 |---------|-------------|
@@ -118,7 +146,7 @@ ccpm-os/
 | `/battlecard` | Competitive battlecard |
 | `/sales-enablement` | Full sales + marketing enablement kit (9 deliverables) |
 
-### Market Research (`commands/market-research/`)
+### Market Research (`.cursor/commands/market-research/`)
 
 | Command | Description |
 |---------|-------------|
@@ -128,14 +156,14 @@ ccpm-os/
 | `/survey-analysis` | Deep B2B survey analysis with evidence-backed insights |
 | `/win-loss` | Win/loss deal analysis with competitive and segment breakdowns |
 
-### Marketing & Growth (`commands/marketing-growth/`)
+### Marketing & Growth (`.cursor/commands/marketing-growth/`)
 
 | Command | Description |
 |---------|-------------|
 | `/north-star` | Define North Star + input metrics |
 | `/market-product` | Positioning and value prop outputs |
 
-### Product Discovery (`commands/product-discovery/`)
+### Product Discovery (`.cursor/commands/product-discovery/`)
 
 | Command | Description |
 |---------|-------------|
@@ -145,7 +173,7 @@ ccpm-os/
 | `/setup-metrics` | Metrics + dashboard setup |
 | `/triage-requests` | Analyze and cluster feature requests |
 
-### Product Strategy (`commands/product-strategy/`)
+### Product Strategy (`.cursor/commands/product-strategy/`)
 
 | Command | Description |
 |---------|-------------|
@@ -157,7 +185,7 @@ ccpm-os/
 | `/product-roadmap` | Phased, dependency-driven roadmap (work backwards from goal) |
 | `/strategic-thinking` | First Principles + Pareto (80/20) analysis |
 
-### Toolkit (`commands/toolkit/`)
+### Toolkit (`.cursor/commands/toolkit/`)
 
 | Command | Description |
 |---------|-------------|
@@ -171,7 +199,7 @@ ccpm-os/
 
 ## Skills (70 playbooks)
 
-Skills are reusable playbooks that live in `skills/<category>/<skill-name>/SKILL.md`. Commands reference them automatically — you don't need to invoke skills directly.
+Skills are reusable playbooks that live in **`.cursor/skills/<category>/<skill-name>/SKILL.md`**. Commands reference them automatically — you don't need to invoke skills directly.
 
 | Category | Skills |
 |----------|--------|
@@ -211,14 +239,14 @@ A Node.js MCP server that connects Cursor to the Webex REST API for messaging wo
 
 When creating new workflows, follow this pattern:
 
-1. **Command** → `commands/<category>/<command-name>.md`
+1. **Command** → **`.cursor/commands/<category>/<command-name>.md`** (after install; edit the same files under repo-root `commands/` if you maintain the source there)
    - YAML frontmatter with `description` and `argument-hint`
    - Title: `# /command-name -- Short Label`
    - Invocation examples
    - 4-step workflow (accept input → apply skill → generate output → offer follow-ups)
    - Notes section
 
-2. **Skill** → `skills/<category>/<skill-name>/SKILL.md`
+2. **Skill** → **`.cursor/skills/<category>/<skill-name>/SKILL.md`**
    - YAML frontmatter with `name` and `description`
    - Purpose, input arguments, step-by-step process, output format, guidelines
 
@@ -231,7 +259,7 @@ Commands reference skills by name in their workflow (e.g., "Apply the **create-p
 When creating project-specific work, outputs default to:
 
 ```
-Cisco/<project>/
+.cursor/Cisco/<project>/
 ├── index.md
 ├── templates/
 ├── playbooks/
@@ -254,4 +282,4 @@ All outputs should be:
 
 ## Cisco Compute reference
 
-`Cisco/CLAUDE.md` provides internal context for Cisco Compute: UCS portfolio map, Intersight framing, glossary, and stakeholder triage questions. Use this for consistent language across PRDs, strategy docs, and stakeholder updates.
+**`.cursor/Cisco/CLAUDE.md`** (local, under your Cursor tree) is the portfolio context file for Cisco Compute: UCS portfolio map, Intersight framing, glossary, stakeholder triage questions, and links you maintain. Use it for consistent language across PRDs, strategy docs, and stakeholder updates. When you work under **`.cursor/Cisco/`**, the scoped rule **[compute.mdc](#computemdc-cisco-compute)** applies — see [Cursor rules](#cursor-rules) above.
