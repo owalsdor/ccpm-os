@@ -16,12 +16,12 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 git clone https://github.com/owalsdor/ccpm-os.git
 ```
 
-2. Copy the subfolders of /commands, /skills to .cursor/commands and .cursor/skills as well as CLAUDE.md to .cursor.
+2. Copy the subfolders of /commands, /skills to .cursor/commands and .cursor/skills. Copy .cursorrules to the same level as .cursor.
 
 3. That's it. Cursor automatically detects:
    - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
    - **Skills** in `skills/` — referenced by commands automatically
-   - **Rules** in `CLAUDE.md` — applied as workspace-level instructions
+   - **Rules** in `.cursorrules` — applied as workspace-level instructions
 
 4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
@@ -52,7 +52,7 @@ If you're not using Cursor, you can still use the skills and commands as prompt 
 - Outputs default to **markdown**
 - Prefers existing commands and skills over inventing new formats
 
-These defaults are defined in `CLAUDE.md` at the repo root.
+These defaults are defined in `.cursorrules` at the repo root.
 
 ---
 
@@ -60,28 +60,29 @@ These defaults are defined in `CLAUDE.md` at the repo root.
 
 ```
 ccpm-os/
-├── CLAUDE.md                  # Workspace rules and defaults
+├── .cursorrules                  # Workspace rules and defaults
 ├── README.md
-├── commands/                  # Slash commands (workflows)
-│   ├── execution/             # Day-to-day PM execution
-│   ├── go-to-market/          # GTM planning and enablement
-│   ├── market-research/       # Research and analysis
-│   ├── marketing-growth/      # Positioning and growth
-│   ├── product-discovery/     # Discovery and ideation
-│   ├── product-strategy/      # Strategy and roadmaps
-│   └── toolkit/               # Utilities and personal tools
-├── skills/                    # Reusable playbooks (referenced by commands)
-│   ├── execution/
-│   ├── go-to-market/
-│   ├── market-research/
-│   ├── marketing-growth/
-│   ├── product-discovery/
-│   ├── product-strategy/
-│   └── toolkit/
-├── mcp/                       # MCP servers (Model Context Protocol)
-│   └── webex/                 # Webex messaging MCP server
-└── Cisco/                     # Cisco-specific context
-    └── CLAUDE.md              # UCS portfolio, Intersight, glossary
+├── .cursor
+    ├── commands/                  # Slash commands (workflows)
+    │   ├── execution/             # Day-to-day PM execution
+    │   ├── go-to-market/          # GTM planning and enablement
+    │   ├── market-research/       # Research and analysis
+    │   ├── marketing-growth/      # Positioning and growth
+    │   ├── product-discovery/     # Discovery and ideation
+    │   ├── product-strategy/      # Strategy and roadmaps
+    │   └── toolkit/               # Utilities and personal tools
+    ├── skills/                    # Reusable playbooks (referenced by commands)
+    │   ├── execution/
+    │   ├── go-to-market/
+    │   ├── market-research/
+    │   ├── marketing-growth/
+    │   ├── product-discovery/
+    │   ├── product-strategy/
+    │   └── toolkit/
+    ├── mcp/                       # MCP servers (Model Context Protocol)
+    │   └── webex/                 # Webex messaging MCP server
+    └── Cisco/                     # Cisco-specific context
+        └── CLAUDE.md              # UCS portfolio, Intersight, glossary
 ```
 
 ---
