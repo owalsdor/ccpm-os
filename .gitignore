@@ -2,3 +2,6 @@
 agent-transcripts/
 **/agent-transcripts/*
 .cursor/
+vendor
+scheduler-app
+mcp/airtable
