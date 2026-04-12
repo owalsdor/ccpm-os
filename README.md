@@ -16,12 +16,12 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 git clone https://github.com/owalsdor/ccpm-os.git
 ```
 
-2. Copy the subfolders of /commands, /skills to .cursor/commands and .cursor/skills. Copy .cursorrules to the same level as .cursor.
+2. Copy the subfolders of /commands, /skills and /rules to .cursor/commands, .cursor/skills and .cursor/rules. Copy .cursorrules to the same level as .cursor.
 
 3. That's it. Cursor automatically detects:
    - **Commands** in `commands/` — available as slash commands in chat (type `/` to see them)
    - **Skills** in `skills/` — referenced by commands automatically
-   - **Rules** in `.cursorrules` — applied as workspace-level instructions
+   - **Rules** in `.cursorrules` and `rules/` — applied as workspace-level and project-level instructions 
 
 4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
@@ -60,9 +60,11 @@ These defaults are defined in `.cursorrules` at the repo root.
 
 ```
 ccpm-os/
-├── .cursorrules                  # Workspace rules and defaults
+├── .cursorrules                   # Workspace rules and defaults
 ├── README.md
 ├── .cursor
+    ├── rules/                     # Rules for Cursor
+    │   ├── compute.mdc/           # Cisco Compute specific rules
     ├── commands/                  # Slash commands (workflows)
     │   ├── execution/             # Day-to-day PM execution
     │   ├── go-to-market/          # GTM planning and enablement
