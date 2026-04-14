@@ -63,8 +63,6 @@ These defaults are defined in `.cursorrules` at the repo root.
 ccpm-os/
 ├── .cursorrules                   # Workspace rules and defaults
 ├── README.md
-├── commands/                      # Source in repo (copy into .cursor/commands for Cursor)
-├── skills/
 ├── mcp/                           # MCP servers (repo root); e.g. webex/, airtable/
 │   └── webex/
 ├── .cursor/
