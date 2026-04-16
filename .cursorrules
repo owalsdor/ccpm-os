@@ -63,3 +63,11 @@ Format:
   ## Trade-offs accepted: {what you gave up}
 
 When about to make a similar decision, grep /decisions/ for prior choices. Follow them unless new information invalidates the reasoning.
+
+## Memory Management
+
+When you discover something valuable for future sessions — architectural decisions, bug fixes, gotchas, environment quirks — immediately append it to .cursor/memory.md
+
+Don't wait to be asked. Don't wait for session end.
+
+Keep entries short: date, what, why. Read this file at the start of every session.
