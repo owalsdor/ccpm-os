@@ -1,11 +1,11 @@
 ---
-description: Brainstorm marketing ideas, positioning, value prop statements, and product names — creative marketing toolkit
+description: Marketing creative toolkit — ideas, positioning, value prop copy, and product names in one workflow
 argument-hint: "<product or marketing challenge>"
 ---
 
 # /market-product -- Marketing Creative Toolkit
 
-Generate creative marketing assets: campaign ideas, positioning statements, value prop copy, and product naming options. All in one workflow or pick specific modules.
+Orchestrates a marketing toolkit by running up to four creative skills together. Pick specific modules or run the whole set.
 
 ## Invocation
 
@@ -19,75 +19,25 @@ Generate creative marketing assets: campaign ideas, positioning statements, valu
 
 ### Step 1: Understand the Marketing Need
 
-Ask:
-- What is the product? Target audience?
-- What do you need? (full marketing toolkit, or specific: ideas, positioning, naming, copy)
-- What's the context? (launch, rebrand, campaign, competitive repositioning)
-- Any existing brand guidelines or tone of voice?
+Ask: what the product is, target audience, what the user needs (full toolkit or a subset), the context (launch / rebrand / campaign / repositioning), and any brand guidelines or tone of voice.
 
-### Step 2: Generate Based on Need
+### Step 2: Delegate to the Right Skill(s)
 
-**Marketing Ideas** — apply **marketing-ideas** skill:
-- 5 creative, cost-effective campaign ideas
-- Each with: channel, messaging angle, engagement rationale, estimated effort
-- Mix of quick wins and bigger bets
+Apply the skill(s) the user needs — each handles its own templates and rationale:
 
-**Positioning** — apply **positioning-ideas** skill:
-- Identify top 5 competitors for positioning context
-- Generate 3-5 positioning statements differentiated from each
-- Include rationale for each positioning angle
+- Campaign ideas → **marketing-ideas** skill
+- Positioning statements → **positioning-ideas** skill
+- Value prop copy (tagline, elevator pitch, landing page, sales one-liner) → **value-prop-statements** skill
+- Product names → **product-name** skill
 
-**Value Proposition Statements** — apply **value-prop-statements** skill:
-- Generate copy for marketing, sales, and onboarding contexts
-- Segment-specific variations
-- Short (tagline), medium (elevator pitch), and long (landing page) versions
+If the user wants the full toolkit, run all four and present them as a single marketing-toolkit artifact.
 
-**Product Naming** — apply **product-name** skill:
-- Brainstorm 5 unique, memorable names
-- Each with: rationale, brand alignment, domain availability notes
-- Check for unintended meanings or conflicts
-
-### Step 3: Generate Output
-
-```
-## Marketing Toolkit: [Product]
-
-**Date**: [today]
-**Context**: [launch / rebrand / campaign / etc.]
-
-### Marketing Campaign Ideas
-| # | Idea | Channel | Effort | Expected Impact |
-|---|------|---------|--------|----------------|
-
-### Positioning Options
-| # | Positioning | vs Competitor | Strength | Risk |
-|---|-----------|--------------|----------|------|
-
-**Recommended positioning**: [which and why]
-
-### Value Prop Copy
-**Tagline**: [one line]
-**Elevator pitch**: [2-3 sentences]
-**Landing page hero**: [headline + subheading]
-**Sales one-liner**: [for sales conversations]
-
-### Product Name Options (if requested)
-| # | Name | Rationale | Domain | Risk |
-|---|------|----------|--------|------|
-
-### Messaging Matrix
-| Audience | Key Message | Proof Point | CTA |
-|----------|-----------|------------|-----|
-```
-
-Save as markdown.
-
-### Step 4: Offer Next Steps
+### Step 3: Offer Next Steps
 
 - "Want me to **draft full marketing content** (blog post, email, social)?"
 - "Should I **define the North Star metric** for this campaign?"
 - "Want me to **create a competitive battlecard** to support positioning?"
-- "Should I **plan the full launch**?"
+- "Should I **plan the full launch**?" (chains to plan-launch)
 
 ## Notes
 

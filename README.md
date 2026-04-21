@@ -2,7 +2,9 @@
 
 A **Markdown-first operating system for Product Managers** built for [Cursor](https://cursor.sh). Reusable slash commands (workflows) and skills (playbooks/templates) that turn rough inputs into high-quality PM artifacts — fast, with minimal back-and-forth.
 
-**41 commands** across 7 categories. **70 skills** covering strategy, execution, research, GTM, and more. **1 MCP server** (Webex).
+**17 commands** across 7 categories. **70 skills** covering strategy, execution, research, GTM, and more. **1 MCP server** (Webex).
+
+Commands are thin orchestrators over skills — they exist only when they add real routing, skill-chaining, a variant override, or a non-skill integration. Everything else runs through skill auto-discovery. See [`commands/README.md`](commands/README.md) for the pattern.
 
 ---
 
@@ -13,7 +15,7 @@ A **Markdown-first operating system for Product Managers** built for [Cursor](ht
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/owalsdor/ccpm-os.git
+git clone https://github.com/owalsdor/ccpm-os
 ```
 
 2. Copy the subfolders of /commands, /skills and /rules to .cursor/commands, .cursor/skills and .cursor/rules. Copy .cursorrules to the same level as .cursor.
@@ -26,7 +28,7 @@ git clone https://github.com/owalsdor/ccpm-os.git
 
 4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
-5. Start using commands immediately: open Cursor chat, type `/`, and pick a command.
+5. Start using commands/skills immediately: open Cursor chat, type `/`, and pick a command.
 
 6. For **Cisco Compute** work, use **`.cursor/Cisco/`** only: maintain **`.cursor/Cisco/CLAUDE.md`** (portfolio vocabulary, triage questions, links) and create per-project folders under **`.cursor/Cisco/<project>/`**. The [compute.mdc](#computemdc-cisco-compute) rule applies when you work in that tree.
 
@@ -117,81 +119,63 @@ See also [Cisco Compute reference](#cisco-compute-reference) below.
 
 ## Commands
 
+Each command is a thin orchestrator — a router, a chain of skills, a variant override, or a non-skill integration. Anything that would just wrap a single skill is handled by skill auto-discovery instead.
+
 ### Execution (`.cursor/commands/execution/`)
 
-| Command | Description |
-|---------|-------------|
-| `/meeting-notes` | Turn transcripts into decisions + action items |
-| `/write-prd` | Draft a PRD from an idea or problem statement |
-| `/write-stories` | Generate user stories and backlog items |
-| `/write-blog` | Draft a blog post |
-| `/test-scenarios` | Generate QA scenarios from requirements |
-| `/stakeholder-map` | Power/interest mapping + comms plan |
-| `/plan-okrs` | OKR brainstorming |
-| `/sprint` | Sprint planning |
-| `/pre-mortem` | Launch/initiative risk pre-mortem |
-| `/transform-roadmap` | Output roadmap → outcome roadmap |
-| `/email-response-short` | Draft a concise email reply |
-| `/email-response-long` | Draft a detailed email reply |
-| `/webex-announcement` | Generate Webex Adaptive Card JSON for product announcements |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/sprint plan\|retro\|release-notes` | Router | Routes to `sprint-plan`, `retro`, or `release-notes` skill |
+| `/write-stories user\|job\|wwa` | Router | Routes to `user-stories`, `job-stories`, or `wwas` skill |
+| `/email-response-short` | Variant | `email-response` skill with `$LENGTH=short`, final email only |
+| `/email-response-long` | Variant | `email-response` skill with `$LENGTH=detailed`, full coaching |
 
 ### Go-to-Market (`.cursor/commands/go-to-market/`)
 
-| Command | Description |
-|---------|-------------|
-| `/plan-launch` | GTM launch plan |
-| `/growth-strategy` | Growth loops and motions |
-| `/battlecard` | Competitive battlecard |
-| `/sales-enablement` | Full sales + marketing enablement kit (9 deliverables) |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/plan-launch` | Chain | `beachhead-segment` → `ideal-customer-profile` → `gtm-strategy` |
+| `/growth-strategy` | Chain | `growth-loops` + `gtm-motions` |
 
 ### Market Research (`.cursor/commands/market-research/`)
 
-| Command | Description |
-|---------|-------------|
-| `/research-users` | User research synthesis and plans |
-| `/analyze-feedback` | Sentiment and themes from feedback |
-| `/competitive-analysis` | Competitor analysis |
-| `/survey-analysis` | Deep B2B survey analysis with evidence-backed insights |
-| `/win-loss` | Win/loss deal analysis with competitive and segment breakdowns |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/research-users` | Chain | `user-personas` → `user-segmentation` + `market-segments` → `customer-journey-map` |
 
 ### Marketing & Growth (`.cursor/commands/marketing-growth/`)
 
-| Command | Description |
-|---------|-------------|
-| `/north-star` | Define North Star + input metrics |
-| `/market-product` | Positioning and value prop outputs |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/market-product` | Chain | `marketing-ideas` + `positioning-ideas` + `value-prop-statements` + `product-name` |
 
 ### Product Discovery (`.cursor/commands/product-discovery/`)
 
-| Command | Description |
-|---------|-------------|
-| `/brainstorm` | Generate ideas for a problem space |
-| `/discover` | Structure discovery work |
-| `/interview` | Interview scripts and questions |
-| `/setup-metrics` | Metrics + dashboard setup |
-| `/triage-requests` | Analyze and cluster feature requests |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/brainstorm [ideas\|experiments] [existing\|new]` | Router | Routes to one of 4 `brainstorm-*` skills |
+| `/discover` | Chain | `brainstorm-ideas` → `identify-assumptions` → `prioritize-assumptions` → `brainstorm-experiments` (with checkpoints) |
+| `/interview prep\|summarize` | Router | Routes to `interview-script` or `summarize-interview` skill |
+| `/triage-requests` | Chain | `analyze-feature-requests` → `prioritize-features` |
 
 ### Product Strategy (`.cursor/commands/product-strategy/`)
 
-| Command | Description |
-|---------|-------------|
-| `/strategy` | Product strategy canvas |
-| `/pricing` | Pricing analysis + options |
-| `/market-scan` | Market scan |
-| `/business-model` | Business model canvas |
-| `/value-proposition` | Value prop design |
-| `/product-roadmap` | Phased, dependency-driven roadmap (work backwards from goal) |
-| `/strategic-thinking` | First Principles + Pareto (80/20) analysis |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/strategy` | Chain | `product-vision` → `product-strategy` (9-section canvas) |
+| `/business-model lean\|full\|startup\|value-prop\|all` | Router | Routes to `lean-canvas`, `business-model`, `startup-canvas`, `value-proposition`, or all four |
+| `/market-scan` | Chain | `swot-analysis` + `pestle-analysis` + `porters-five-forces` + `ansoff-matrix` |
+| `/pricing` | Chain | `pricing-strategy` + `monetization-strategy` |
 
 ### Toolkit (`.cursor/commands/toolkit/`)
 
-| Command | Description |
-|---------|-------------|
-| `/proofread` | Grammar, logic, and flow check |
-| `/documentation` | Write, edit, or update product documentation |
-| `/teamspace-review` | Performance self-assessment from weekly reflections |
-| `/weekly-braindump` | Turn a brain dump into a structured weekly plan |
-| `/webex-ai-followups` | Scan Webex DMs for pending follow-ups via MCP and return actionable lists |
+| Command | Pattern | Description |
+|---------|---------|-------------|
+| `/webex-ai-followups` | MCP | Scans Webex DMs via the Webex MCP server — not a skill wrapper |
+
+### What happened to the other commands?
+
+Earlier versions of this repo had ~41 commands. Most of them were one-to-one wrappers of a single skill (e.g., `/write-prd` → `create-prd` skill) that added no routing, chaining, or variant logic. Those were removed in favor of skill auto-discovery — just ask the agent ("draft a PRD for X", "run a pre-mortem on this plan") and the matching skill fires automatically. See [`commands/README.md`](commands/README.md) for when a command is worth adding back.
 
 ---
 
@@ -235,20 +219,27 @@ A Node.js MCP server that connects Cursor to the Webex REST API for messaging wo
 
 ## Adding new commands and skills
 
-When creating new workflows, follow this pattern:
+**Default to skills.** New capability → new skill. Cursor's agent will auto-invoke it when the user's intent matches the skill's `description`.
 
-1. **Command** → **`.cursor/commands/<category>/<command-name>.md`** (after install; edit the same files under repo-root `commands/` if you maintain the source there)
-   - YAML frontmatter with `description` and `argument-hint`
-   - Title: `# /command-name -- Short Label`
-   - Invocation examples
-   - 4-step workflow (accept input → apply skill → generate output → offer follow-ups)
-   - Notes section
+**Add a command only when it earns its place.** A command must do at least one of:
+- **Route** between multiple skills based on a mode argument
+- **Chain** several skills in a fixed sequence and stitch their outputs
+- **Override** a skill with a hard parameter the agent wouldn't infer (length, tone, output trimming)
+- **Integrate** with a non-skill target (MCP server, external API)
 
-2. **Skill** → **`.cursor/skills/<category>/<skill-name>/SKILL.md`**
-   - YAML frontmatter with `name` and `description`
-   - Purpose, input arguments, step-by-step process, output format, guidelines
+### Skill → `.cursor/skills/<category>/<skill-name>/SKILL.md`
+- YAML frontmatter with `name` and `description`
+- Purpose, input arguments, step-by-step process, output format, guidelines
+- The skill owns its templates and domain knowledge.
 
-Commands reference skills by name in their workflow (e.g., "Apply the **create-prd** skill").
+### Command → `.cursor/commands/<category>/<command-name>.md`
+- YAML frontmatter with `description` and `argument-hint`
+- Title: `# /command-name -- Short Label`
+- Invocation examples
+- Short workflow that parses mode, delegates to skill(s), and offers cross-command follow-ups
+- Only command-specific overrides in `## Notes`
+
+Do NOT duplicate the skill's templates, field-by-field question lists, or capability summary inside the command. See [`commands/README.md`](commands/README.md) for the full thin-wrapper pattern.
 
 ---
 

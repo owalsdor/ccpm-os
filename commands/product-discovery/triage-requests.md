@@ -5,7 +5,7 @@ argument-hint: "<feature requests as text, file, or paste>"
 
 # /triage-requests -- Feature Request Triage
 
-Take a pile of feature requests — from support tickets, sales calls, surveys, or Slack — and turn them into a prioritized, actionable backlog.
+Orchestrates feature-request triage by chaining two skills: analyze → prioritize. Turns a pile of requests into a ranked, actionable backlog.
 
 ## Invocation
 
@@ -19,102 +19,33 @@ Take a pile of feature requests — from support tickets, sales calls, surveys, 
 
 ### Step 1: Accept Feature Requests
 
-Accept requests in any format:
-- **Pasted text**: List of requests, one per line or paragraph
-- **Uploaded file**: CSV, Excel, or text file with request data
-- **Structured data**: If the input has columns (requester, request, date, etc.), preserve them
-
-If no input is provided, ask the user to paste or upload their feature requests.
-
-Parse each request to extract:
-- The core ask (what the user wants)
-- Context (who asked, when, why — if available)
-- Frequency signals (how many people asked for similar things)
+Accept pasted text, uploaded files (CSV/Excel/text), or structured data. If structured, preserve the original columns and enrich them.
 
 ### Step 2: Gather Prioritization Context
 
-Ask the user (conversationally, not all at once):
-- What is the product? What stage is it in?
-- What are the current strategic goals or OKRs? (helps assess alignment)
-- Any constraints to consider? (team size, technical debt, upcoming deadlines)
-- Are there segments whose requests should carry more weight? (enterprise, churning users, power users)
+Ask (conversationally, not all at once):
+- What is the product and what stage is it in?
+- Current strategic goals or OKRs?
+- Constraints? (team size, tech debt, deadlines)
+- Segments whose requests should carry more weight? (enterprise, churning, power users)
 
-### Step 3: Categorize and Analyze
+### Step 3: Chain the Skills
 
-Apply the **analyze-feature-requests** skill:
+1. **analyze-feature-requests** — cluster into themes, count requests per theme, rate strategic alignment, surface segment patterns and sentiment signals.
+2. **prioritize-features** — score themes and top requests by impact, strategic alignment, effort, risk, and revenue signal. Rank them.
 
-- **Theme clustering**: Group similar requests into themes (e.g., "reporting & analytics", "collaboration", "mobile experience")
-- **Request count per theme**: How many unique requests map to each theme
-- **Strategic alignment**: Rate each theme against stated goals (High/Medium/Low/None)
-- **Segment analysis**: Which user segments are driving which themes
-- **Sentiment signals**: Are requests accompanied by frustration, churn threats, or delight?
+Let each skill produce its own output; combine into a triage report with priority tiers (Act Now / Plan Next / Collect More Signal / Decline or Defer).
 
-### Step 4: Prioritize
+### Step 4: Offer Next Steps
 
-Apply the **prioritize-features** skill:
-
-For each theme (and the top individual requests within each theme):
-
-| Factor | Assessment |
-|--------|-----------|
-| **Impact** | How many users affected? How severely? |
-| **Strategic alignment** | Does it serve current goals? |
-| **Effort estimate** | T-shirt size (S/M/L/XL) |
-| **Risk** | What happens if we don't do this? |
-| **Revenue signal** | Is this tied to deals, retention, or expansion? |
-
-Rank themes and produce a prioritized list.
-
-### Step 5: Generate Triage Report
-
-```
-## Feature Request Triage Report
-
-**Date**: [today]
-**Requests analyzed**: [count]
-**Themes identified**: [count]
-
-### Theme Summary
-| # | Theme | Requests | Top Ask | Alignment | Impact | Effort | Priority |
-|---|-------|----------|---------|-----------|--------|--------|----------|
-
-### Priority 1: Act Now
-[Themes/requests to include in near-term planning]
-- **[Theme]**: [X] requests — [why it's urgent]
-  - Top requests: [list]
-  - Recommended action: [build / prototype / investigate]
-
-### Priority 2: Plan Next
-[Themes worth planning but not urgent]
-
-### Priority 3: Collect More Signal
-[Themes with potential but insufficient evidence]
-
-### Priority 4: Decline or Defer
-[Requests that don't align with strategy — with rationale]
-
-### Notable Individual Requests
-[High-value one-off requests that didn't cluster into themes]
-
-### Patterns and Insights
-- [Key insight about what users are telling you]
-- [Segment-specific patterns]
-- [Gaps between what users ask for and underlying needs]
-```
-
-Save the report as a markdown file to the user's workspace.
-
-### Step 6: Offer Next Steps
-
-- "Want me to **create user stories** for the top-priority items?"
-- "Should I **brainstorm solutions** for any of these themes?"
+- "Want me to **create user stories** for the top-priority items?" (chains to write-stories)
+- "Should I **brainstorm solutions** for any of these themes?" (chains to brainstorm)
 - "Want me to **design experiments** to validate demand before building?"
 - "Should I **draft a stakeholder update** summarizing this analysis?"
 
 ## Notes
 
-- If the user provides a CSV with columns, preserve the data structure and enrich it
-- Look for the need behind the request — "add dark mode" might really mean "reduce eye strain during long sessions"
-- Flag requests that conflict with each other (e.g., "simplify the UI" vs. "add more configuration options")
-- If request volume is large (50+), summarize themes first and offer to drill into specific themes on request
-- Output the enriched data as a downloadable CSV if the input was structured data
+- Preserve any input CSV structure — output enriched data as a downloadable CSV if applicable
+- Look for the need *behind* the request — "add dark mode" might really mean "reduce eye strain"
+- Flag requests that conflict with each other (e.g., "simplify the UI" vs. "add more configuration")
+- If volume is large (50+), summarize themes first and offer to drill into specific themes
