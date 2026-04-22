@@ -31,15 +31,21 @@ Track two types of knowledge:
 - Domain: what things are (product context, user preferences, APIs, naming conventions, team decisions)
 - Procedural: how to do things (deploy steps, test commands, review flows)
 
-Organize knowledge as a hierarchy of .md files:
-- knowledge/INDEX[.]md routes to categories
-- Categories hold the details
+Organize knowledge as a **federated hierarchy** of .md files under `.cursor/knowledge/`:
+- `.cursor/knowledge/INDEX.md` is the top router (shared + all projects).
+- `.cursor/knowledge/<project>/` holds project-scoped knowledge (mirrors global shape: `INDEX.md`, `ERRORS.md`, and `domain*` / `procedural*` as needed). One subtree per Cisco project.
+- `.cursor/knowledge/_shared/` holds knowledge that applies to 2+ projects or is portfolio-wide (`_shared/domain/`, `_shared/procedural/`).
 - Progressive disclosure. Read top-down, only load what you need.
+- **Graduation path**: raw signal → project `ERRORS.md` → project `domain.md` / `procedural.md` → `_shared/` when the same conclusion lands in 2+ project subtrees.
 
-Log errors to knowledge/ERRORS.md. Not every error is a mistake:
+Log errors in the nearest ERRORS file:
+- Project-scoped error → `.cursor/knowledge/<project>/ERRORS.md`
+- Cross-project / agent-wide error → `.cursor/knowledge/ERRORS.md`
+
+Not every error is a mistake:
 - Deterministic errors (bad schema, wrong type, missing field) → conclude immediately
 - Infrastructure errors (timeout, rate limit, network) → log, no conclusion until pattern emerges
-- Conclusions graduate into the relevant domain or procedural file
+- Conclusions graduate into the relevant `<project>/domain.md` or `<project>/procedural.md`, and into `_shared/` when they apply to 2+ projects
 
 ## Self-Maintenance
 Actively manage the knowledge system. This is as important as the current task:
@@ -53,7 +59,7 @@ Actively manage the knowledge system. This is as important as the current task:
 ## Decisions
 When choosing between alternatives that affect more than today's task — a library, an architecture pattern, an API design, or deciding NOT to do something — log it:
 
-File: /decisions/YYYY-MM-DD-{topic}.md
+File: `.cursor/decisions/YYYY-MM-DD-{topic}.md` (copy `.cursor/decisions/_template.md`)
 
 Format:
   ## Decision: {what you decided}
@@ -62,7 +68,7 @@ Format:
   ## Reasoning: {why this option won}
   ## Trade-offs accepted: {what you gave up}
 
-When about to make a similar decision, grep /decisions/ for prior choices. Follow them unless new information invalidates the reasoning.
+When about to make a similar decision, grep `.cursor/decisions/` for prior choices. Follow them unless new information invalidates the reasoning.
 
 ## Memory Management
 

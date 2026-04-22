@@ -106,7 +106,7 @@ Files in **`.cursor/rules/`** use the **`.mdc`** extension. Each file is a **sco
 
 ### compute.mdc (Cisco Compute)
 
-[`compute.mdc`](rules/compute.mdc) applies when the task touches files under **`.cursor/Cisco/`** (glob: `.cursor/Cisco/**`; `alwaysApply: false`). It tells the AI to:
+[`compute.mdc`](.cursor/rules/compute.mdc) applies when the task touches files under **`.cursor/Cisco/`** (glob: `.cursor/Cisco/**`; `alwaysApply: false`). It tells the AI to:
 
 - Treat **“Cisco”** in this workflow as **`.cursor/Cisco/` only** — not a root-level `Cisco/` folder for project work.
 - Read **`.cursor/Cisco/CLAUDE.md`** first when it exists (portfolio scope, UCS / fabric / Intersight framing, vocabulary, triage questions, your links).
