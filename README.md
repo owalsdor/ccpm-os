@@ -18,13 +18,25 @@ Commands are thin orchestrators over skills — they exist only when they add re
 git clone https://github.com/owalsdor/ccpm-os
 ```
 
-2. Copy the subfolders of /commands, /skills and /rules to .cursor/commands, .cursor/skills and .cursor/rules. Copy .cursorrules to the same level as .cursor.
+2. Copy the repo-root starter folders into `.cursor/`:
+   - `/commands` → `.cursor/commands`
+   - `/skills` → `.cursor/skills`
+   - `/rules` → `.cursor/rules`
+   - `/decisions` → `.cursor/decisions` *(starter log; see [Knowledge & Decisions](#knowledge--decisions))*
+   - `/knowledge` → `.cursor/knowledge` *(starter federated knowledge tree)*
+
+   Copy `.cursorrules` to the same level as `.cursor/`.
+
+   Why `.cursor/`? That directory is **gitignored** (see `.gitignore`), so your live decisions, knowledge, and project notes stay private. The repo-root copies are the template everyone clones. On your first commit back upstream, nothing under `.cursor/` leaves your machine.
+
+   **Use plain copies, not symlinks.** Cloud-sync tools (Synology Drive, iCloud, OneDrive, Dropbox) silently convert symlinks back into real directories and create `_Conflict` files. Plain copies are more reliable. If you edit a repo-root file (e.g., add a rule in `rules/`), copy the change over to `.cursor/…` again.
 
 3. That's it. Cursor automatically detects:
    - **Commands** in **`.cursor/commands/`** — available as slash commands in chat (type `/` to see them)
    - **Skills** in **`.cursor/skills/`** — referenced by commands automatically
    - **Workspace rules** in **`.cursorrules`** (repo root, next to `.cursor/`)
    - **Scoped rules** in **`.cursor/rules/*.mdc`** — e.g. file-specific or folder-specific instructions (see [Cursor rules](#cursor-rules) below)
+   - **Decisions log** in **`.cursor/decisions/`** and **knowledge base** in **`.cursor/knowledge/`** — the agent reads and writes here per `.cursorrules` (see [Knowledge & Decisions](#knowledge--decisions))
 
 4. For **MCP servers** (e.g., Webex), see `mcp/webex/README.md` for build and auth instructions, then add the server in **Cursor Settings > Features > MCP**.
 
@@ -61,40 +73,52 @@ These defaults are defined in `.cursorrules` at the repo root.
 
 ## Repository structure
 
+The repo is organized as **two mirrored surfaces**:
+
+- **Repo-root folders** (`commands/`, `skills/`, `rules/`, `decisions/`, `knowledge/`, `mcp/`) — starter templates, tracked in Git, what adopters clone from GitHub.
+- **`.cursor/`** — your local, live workspace. **Gitignored** (see `.gitignore`), so anything you put here stays private.
+
+On first setup you copy the repo-root starters into `.cursor/` (see [Installation](#installation)). From then on, you edit the copies under `.cursor/` and the repo-root versions stay as the canonical template.
+
 ```
 ccpm-os/
 ├── .cursorrules                   # Workspace rules and defaults
 ├── README.md
-├── mcp/                           # MCP servers (repo root); e.g. webex/, airtable/
+├── commands/                      # Slash commands — starter (copy to .cursor/commands)
+│   ├── execution/
+│   ├── go-to-market/
+│   ├── market-research/
+│   ├── marketing-growth/
+│   ├── product-discovery/
+│   ├── product-strategy/
+│   └── toolkit/
+├── skills/                        # Reusable playbooks — starter (copy to .cursor/skills)
+│   ├── execution/
+│   ├── go-to-market/
+│   ├── market-research/
+│   ├── marketing-growth/
+│   ├── product-discovery/
+│   ├── product-strategy/
+│   └── toolkit/
+├── rules/                         # Scoped Cursor rules — starter (copy to .cursor/rules)
+│   └── compute.mdc                # Cisco Compute — activates under .cursor/Cisco/**
+├── decisions/                     # Decisions log — starter (copy to .cursor/decisions)
+│   ├── README.md
+│   ├── _template.md
+│   └── YYYY-MM-DD-example-*.md    # illustrative entry
+├── knowledge/                     # Federated knowledge base — starter (copy to .cursor/knowledge)
+│   ├── INDEX.md
+│   ├── ERRORS.md
+│   ├── _shared/                   # portfolio-wide: domain/ + procedural/
+│   └── example-project/           # illustrative per-project subtree
+├── mcp/                           # MCP servers (not gitignored under .cursor)
 │   └── webex/
-├── .cursor/
-    ├── rules/                     # Scoped Cursor rules (.mdc)
-    │   └── compute.mdc            # Cisco Compute — activates under .cursor/Cisco/**
-    ├── commands/                  # Slash commands (workflows), after copy from repo
-    │   ├── execution/
-    │   ├── go-to-market/
-    │   ├── market-research/
-    │   ├── marketing-growth/
-    │   ├── product-discovery/
-    │   ├── product-strategy/
-    │   └── toolkit/
-    ├── skills/                    # Reusable playbooks (referenced by commands)
-    │   ├── execution/
-    │   ├── go-to-market/
-    │   ├── market-research/
-    │   ├── marketing-growth/
-    │   ├── product-discovery/
-    │   ├── product-strategy/
-    │   └── toolkit/
-    ├── decisions/                 # Durable decisions log (per .cursorrules)
-    │   ├── README.md
-    │   ├── _template.md
-    │   └── YYYY-MM-DD-{topic}.md  # one file per decision
-    ├── knowledge/                 # Federated knowledge base (see § Knowledge & Decisions)
-    │   ├── INDEX.md               # top router: _shared + per-project subtrees
-    │   ├── ERRORS.md              # cross-project / agent-wide errors
-    │   ├── _shared/               # portfolio-wide: domain/ + procedural/
-    │   └── <project>/             # per-project: INDEX, ERRORS, domain, procedural
+└── .cursor/                       # Local, private, gitignored workspace
+    ├── commands/                  # copy of /commands
+    ├── skills/                    # copy of /skills
+    ├── rules/                     # copy of /rules
+    ├── decisions/                 # your live decisions log (seeded from /decisions)
+    ├── knowledge/                 # your live federated knowledge base (seeded from /knowledge)
     ├── memory.md                  # append-only notes carried across sessions
     └── Cisco/                     # Local Cisco projects + context (not repo-root Cisco/)
         ├── CLAUDE.md              # Portfolio: UCS, Intersight, glossary (you maintain)
@@ -108,6 +132,8 @@ ccpm-os/
             ├── files/
             └── glossary.md        # optional
 ```
+
+> `.cursorrules` references `.cursor/decisions/` and `.cursor/knowledge/` because that's where your **live** log lives. The repo-root `decisions/` and `knowledge/` are starter templates that populate those paths once you copy them over.
 
 ---
 
