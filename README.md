@@ -86,13 +86,26 @@ ccpm-os/
     │   ├── product-discovery/
     │   ├── product-strategy/
     │   └── toolkit/
+    ├── decisions/                 # Durable decisions log (per .cursorrules)
+    │   ├── README.md
+    │   ├── _template.md
+    │   └── YYYY-MM-DD-{topic}.md  # one file per decision
+    ├── knowledge/                 # Federated knowledge base (see § Knowledge & Decisions)
+    │   ├── INDEX.md               # top router: _shared + per-project subtrees
+    │   ├── ERRORS.md              # cross-project / agent-wide errors
+    │   ├── _shared/               # portfolio-wide: domain/ + procedural/
+    │   └── <project>/             # per-project: INDEX, ERRORS, domain, procedural
+    ├── memory.md                  # append-only notes carried across sessions
     └── Cisco/                     # Local Cisco projects + context (not repo-root Cisco/)
         ├── CLAUDE.md              # Portfolio: UCS, Intersight, glossary (you maintain)
-        └── <project>/             # Per-project: index, templates, playbooks, examples, …
+        └── <project>/             # Per-project working files (knowledge lives in ../knowledge/<project>/)
             ├── index.md
-            ├── templates/
+            ├── meetings/
             ├── playbooks/
             ├── examples/
+            ├── slides/
+            ├── process/
+            ├── files/
             └── glossary.md        # optional
 ```
 
@@ -114,6 +127,54 @@ Files in **`.cursor/rules/`** use the **`.mdc`** extension. Each file is a **sco
 - Follow **`.cursorrules`** and prefer **`.cursor/commands/`** and **`.cursor/skills/`** for PM OS workflows.
 
 See also [Cisco Compute reference](#cisco-compute-reference) below.
+
+---
+
+## Knowledge & Decisions
+
+The agent maintains three long-lived surfaces under `.cursor/`. The exact behavior is defined in `.cursorrules`; this section is just the map.
+
+### Decisions — `.cursor/decisions/`
+
+Durable record of choices that affect more than today's task (a library, architecture pattern, API design, or an explicit decision *not* to do something).
+
+- One file per decision: `YYYY-MM-DD-{topic}.md`
+- Copy [`_template.md`](.cursor/decisions/_template.md) to start
+- Before making a similar decision, grep this folder for prior choices
+
+The expected shape of each entry:
+
+```
+## Decision: {what you decided}
+## Context: {why this came up}
+## Alternatives considered: {what else was on the table}
+## Reasoning: {why this option won}
+## Trade-offs accepted: {what you gave up}
+```
+
+See [`decisions/README.md`](.cursor/decisions/README.md).
+
+### Knowledge — `.cursor/knowledge/`
+
+Federated knowledge base. Two kinds of entries (from `.cursorrules`):
+
+- **Domain** — *what things are*: product context, APIs, naming conventions, stakeholders, glossary
+- **Procedural** — *how to do things*: deploy steps, review flows, recurring playbooks
+
+Structure:
+
+| Path | Purpose |
+|---|---|
+| [`INDEX.md`](.cursor/knowledge/INDEX.md) | Top router: lists `_shared` and every project |
+| `ERRORS.md` | Cross-project / agent-wide errors |
+| `_shared/{domain,procedural}/` | Knowledge that applies to 2+ projects or is portfolio-wide |
+| `<project>/` | Per-project subtree — mirrors `INDEX.md`, `ERRORS.md`, `domain.md`, `procedural.md` |
+
+**Graduation path.** Raw signal → project `ERRORS.md` → project `domain.md`/`procedural.md` → `_shared/` once the same conclusion lands in 2+ project subtrees. Errors are classified as *deterministic* (conclude immediately, fix, graduate) or *infrastructure* (log, wait for a pattern).
+
+### Memory — `.cursor/memory.md`
+
+Append-only notes worth carrying across sessions: environment quirks, small fixes, gotchas. Short entries: date, what, why. Read at the start of every session.
 
 ---
 
@@ -250,11 +311,16 @@ When creating project-specific work, outputs default to:
 ```
 .cursor/Cisco/<project>/
 ├── index.md
-├── templates/
+├── meetings/
 ├── playbooks/
 ├── examples/
+├── slides/
+├── process/
+├── files/
 └── glossary.md          # optional
 ```
+
+Distilled project knowledge (what things are, how things are done, error patterns) lives **outside** the project folder in the federated tree at `.cursor/knowledge/<project>/`. See [Knowledge & Decisions](#knowledge--decisions) above.
 
 ---
 
