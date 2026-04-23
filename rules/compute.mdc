@@ -1,34 +1,34 @@
 ---
 description: Cisco Compute work — local projects only under .cursor/Cisco (UCS, fabric, Intersight, PM OS shape)
-globs: .cursor/Cisco/**
+globs: Cisco/**
 alwaysApply: false
 ---
 
 ## Scope (what “Cisco” means in this repo)
 
-- **“Cisco” and all Cisco projects** mean paths under **`.cursor/Cisco/**` only.** Do not create, move, or reference work under a root-level **`Cisco/`** directory for this workflow.
+- **“Cisco” and all Cisco projects** mean paths under **`Cisco/**` only.** Do not create, move, or reference work under a root-level **`Cisco/`** directory for this workflow.
 - This rule applies whenever the task touches files under **`.cursor/Cisco/**`.
 
 ## Mandatory context (local)
 
-- **Before** planning, writing, or editing under **`.cursor/Cisco/**`**, read **`.cursor/Cisco/CLAUDE.md`** if it exists. Treat it as the **source of truth** for portfolio scope, UCS / fabric / Intersight framing, vocabulary, stakeholder triage questions, and any links or notes **you** keep there.
-- If **`.cursor/Cisco/CLAUDE.md`** is missing, **create it** (or ask the user for a one-line pointer) before large Cisco-specific deliverables so future sessions stay consistent.
+- **Before** planning, writing, or editing under **`Cisco/**`**, read **`Cisco/CLAUDE.md`** if it exists. Treat it as the **source of truth** for portfolio scope, UCS / fabric / Intersight framing, vocabulary, stakeholder triage questions, and any links or notes **you** keep there.
+- If **`Cisco/CLAUDE.md`** is missing, **create it** (or ask the user for a one-line pointer) before large Cisco-specific deliverables so future sessions stay consistent.
 
 ## Project shape (per project)
 
-- Each project lives at **`.cursor/Cisco/<project>/`** with:
-  - `.cursor/Cisco/<project>/index.md`
-  - `.cursor/Cisco/<project>/templates/`
-  - `.cursor/Cisco/<project>/playbooks/`
-  - `.cursor/Cisco/<project>/examples/`
-  - `.cursor/Cisco/<project>/glossary.md` (optional)
+- Each project lives at **`Cisco/<project>/`** with:
+  - `Cisco/<project>/index.md`
+  - `Cisco/<project>/templates/`
+  - `Cisco/<project>/playbooks/`
+  - `Cisco/<project>/examples/`
+  - `Cisco/<project>/glossary.md` (optional)
 - Prefer **scannable headings**, **checklists**, explicit **audience** and **use**; for meeting/decision work include **Decisions**, **Action items** (owner + due date when known), and **Open questions**.
 
 ## Product behavior (Cisco Compute)
 
-- Stay aligned with the vocabulary and scope in **`.cursor/Cisco/CLAUDE.md`** (UCS families, FI/FEX, Intersight, AI-related packaging as **you** document them there).
-- When scope is unclear, use the **triage questions** defined in **`.cursor/Cisco/CLAUDE.md`**. If that file does not list them yet, ask **≤2** focused questions instead of guessing.
-- Do **not** invent Cisco-specific claims, SKUs, or URLs; ground statements in **`.cursor/Cisco/CLAUDE.md`**, the current project’s files, or materials the user provides.
+- Stay aligned with the vocabulary and scope in **`Cisco/CLAUDE.md`** (UCS families, FI/FEX, Intersight, AI-related packaging as **you** document them there).
+- When scope is unclear, use the **triage questions** defined in **`Cisco/CLAUDE.md`**. If that file does not list them yet, ask **≤2** focused questions instead of guessing.
+- Do **not** invent Cisco-specific claims, SKUs, or URLs; ground statements in **`Cisco/CLAUDE.md`**, the current project’s files, or materials the user provides.
 
 ## Handoff with global PM OS rules
 
@@ -37,4 +37,4 @@ alwaysApply: false
 
 ## Decisions
 
-- For choices that affect more than one Cisco project under **`.cursor/Cisco/**`**, log per **`.cursorrules`**: `.cursor/decisions/YYYY-MM-DD-{topic}.md` and check prior entries before contradicting them.
+- For choices that affect more than one Cisco project under **`Cisco/**`**, log per **`.cursorrules`**: `decisions/YYYY-MM-DD-{topic}.md` and check prior entries before contradicting them.
