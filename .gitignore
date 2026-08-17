@@ -1,0 +1,59 @@
+# Operating system and editor files
+.DS_Store
+*.swp
+*.tmp
+*.log
+
+# Local environments and generated output
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+.venv/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+vendor/
+
+# Agent traces and local Codex configuration
+agent-transcripts/
+**/agent-transcripts/
+.codex/
+
+# Private product-management work
+Cisco/*
+!Cisco/AGENTS.md
+customers/
+personal/
+performance-reviews/
+memory.md
+voice-profile-olli.md
+anti-ai-writing.md
+
+# Keep the public starter files, ignore new live records by default
+decisions/*
+!decisions/README.md
+!decisions/_template.md
+!decisions/2026-01-01-example-pick-a-database.md
+
+knowledge/*
+!knowledge/INDEX.md
+!knowledge/ERRORS.md
+!knowledge/_shared/
+!knowledge/_shared/**
+!knowledge/example-project/
+!knowledge/example-project/**
+
+# Local integration state
+.webex-mcp/
+
+# Retired Cursor paths stay ignored if a sync tool recreates them
+.cursor/
+.cursorrules
+commands/
+mcp/
+rules/
+scheduler-app/
+skills/

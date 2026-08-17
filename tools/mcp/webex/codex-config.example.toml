@@ -1,0 +1,3 @@
+[mcp_servers.webex]
+command = "node"
+args = ["/absolute/path/to/ccpm-os/tools/mcp/webex/dist/index.js"]
